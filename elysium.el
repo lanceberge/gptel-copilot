@@ -208,14 +208,15 @@ Must be a number between 0 and 1, exclusive."
       (with-current-buffer chat-buffer
         (goto-char (point-max))
         (when user-query
-	  (insert "\n\n")
+          (insert "\n\n")
           (insert (concat (gptel-prompt-prefix-string) user-query)))
         (insert "\n\n")))
 
-    (gptel-request full-query
-      :system elysium-base-prompt
-      :buffer chat-buffer
-      :callback (apply-partially #'elysium-handle-response code-buffer))))
+    (let ((gptel-include-reasoning nil))
+      (gptel-request full-query
+        :system elysium-base-prompt
+        :buffer chat-buffer
+        :callback (apply-partially #'elysium-handle-response code-buffer)))))
 
 (defun elysium-handle-response (code-buffer response info)
   "Handle the RESPONSE from gptel.
